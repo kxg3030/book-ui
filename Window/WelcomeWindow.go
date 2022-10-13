@@ -7,9 +7,21 @@ import (
 )
 
 func WelcomeWindow(window fyne.Window) fyne.CanvasObject {
-	return container.NewVBox(
-		widget.NewButton("文件管理默认窗口", func() {
+	rich := widget.NewRichTextFromMarkdown(`
+## RichText Heading
 
-		}),
-	)
+## A Sub Heading
+
+---
+
+* Item1 in _three_ segments
+* Item2
+* Item3
+
+Normal **Bold** *Italic* [Link](https://fyne.io/) and some ` + "`Code`" + `.
+This styled row should also wrap as expected, but only *when required*.
+
+> An interesting quote here, most likely sharing some very interesting wisdom.`)
+	rich.Scroll = container.ScrollHorizontalOnly
+	return container.NewVBox(container.NewGridWithRows(1, rich))
 }

@@ -76,7 +76,6 @@ func (i *Application) MainWindow() {
 func (i *Application) MasterWindow() {
 	split := container.NewHSplit(i.left, i.rightBox.ContentBox)
 	split.Offset = 0.2
-
 	i.window = i.app.NewWindow("book-ui")
 	i.window.Resize(fyne.NewSize(i.width, i.height))
 	i.window.SetContent(split)
