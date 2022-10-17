@@ -12,22 +12,15 @@ import (
 //go:embed ico.ico
 var iconByte []byte
 
-type MenuInfo struct {
-	Title      string
-	Intro      string
-	SupportWeb bool
-	View       func(w fyne.Window) fyne.CanvasObject
-}
-
 type Application struct {
 	// 应用
 	app fyne.App
 	// 主窗口
-	window fyne.Window
+	Window fyne.Window
 	// 左侧菜单
-	left *fyne.Container
+	LeftBox *LeftContainer
 	// 右侧内容
-	rightBox *RightContainer
+	RightBox *RightContainer
 	// 左侧菜单索引
 	menuIndex string
 	height    float32
@@ -46,13 +39,15 @@ func (i *Application) Run() {
 	i.height = 600
 	i.width = 800
 	i.app = app.NewWithID("com.book.ui")
+	// 保存全局对象
+	i.SaveApp()
 	// 设置支持中文
 	i.SupportZh()
 	// 设置主窗口
 	i.MainWindow()
 }
 
-func (i *Application) Setting() {
+func (i *Application) SaveApp() {
 
 }
 
@@ -61,48 +56,51 @@ func (i *Application) SupportZh() {
 }
 
 func (i *Application) MainWindow() {
+	i.Window = i.app.NewWindow("book-ui")
 	// 设置托盘图标
 	i.MakeTray()
 	// 设置应用图标
 	i.Iconic()
 	// 设置右侧容器
-	i.RightBox()
+	i.RightBoxSet()
 	// 左侧菜单容器
-	i.LeftMenu()
+	i.LeftMenuSet()
 	// 显示主窗口
 	i.MasterWindow()
 }
 
 func (i *Application) MasterWindow() {
-	split := container.NewHSplit(i.left, i.rightBox.ContentBox)
-	split.Offset = 0.2
-	i.window = i.app.NewWindow("book-ui")
-	i.window.Resize(fyne.NewSize(i.width, i.height))
-	i.window.SetContent(split)
-	i.window.SetMaster()
-	i.window.ShowAndRun()
+	split := container.NewHSplit(i.LeftBox.MenuBox, i.RightBox.ContentBox)
+	split.Offset = 0.25
+	i.Window.Resize(fyne.NewSize(i.width, i.height))
+	i.Window.SetContent(split)
+	i.Window.SetMaster()
+	i.Window.ShowAndRun()
 }
 
-// LeftMenu 左侧菜单
-func (i *Application) LeftMenu() {
-	// 默认菜单选项
+// LeftMenuSet 左侧菜单
+func (i *Application) LeftMenuSet() {
 	i.app.Preferences().SetString("selectedMenu", "check")
-	i.left = NewLeftContainer(i.rightBox, i.window).Init().MenuBox
+	i.LeftBox = NewLeftContainer(i.RightBox, i.Window).Init()
 }
 
-// RightBox 右侧内容
-func (i *Application) RightBox() {
-	i.rightBox = NewRightContainer()
-	i.rightBox.Init()
+// RightBoxSet 右侧内容
+func (i *Application) RightBoxSet() {
+	i.RightBox = NewRightContainer()
+	i.RightBox.Init()
 }
 
 // MakeTray 托盘图标
 func (i *Application) MakeTray() {
+	i.Window.SetCloseIntercept(func() {
+		i.Window.Hide()
+	})
 	if desk, ok := i.app.(desktop.App); ok {
-		menu := fyne.NewMenu("托盘菜单")
+		menu := fyne.NewMenu("")
 		menu.Items = make([]*fyne.MenuItem, 0)
 		// 创建子菜单
-		item := fyne.NewMenuItem("测试菜单", func() {
+		item := fyne.NewMenuItem("显示", func() {
+			i.Window.Show()
 			menu.Refresh()
 		})
 		menu.Items = append(menu.Items, item)

@@ -3,25 +3,33 @@ package Service
 import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 	"github.com/kxg3030/book-ui/Window"
 )
+
+type MenuInfo struct {
+	Title string
+	Intro string
+	View  func(w fyne.Window) fyne.CanvasObject
+}
 
 var (
 	// MenuList 所有菜单
 	MenuList = map[string]MenuInfo{
 		"welcome": {
-			Title: "超级助手",
-			Intro: "超级助手介绍",
+			Title: "账号登陆",
+			Intro: "账号登陆",
 			View:  Window.WelcomeWindow,
 		},
 		"fileCheck": {
-			Title: "审核",
-			Intro: "审核简介",
+			Title: "文件审核",
+			Intro: "文件审核",
 			View:  Window.CheckWindowView,
 		},
 		"fileList": {
-			Title: "列表",
+			Title: "文件列表",
 			Intro: "文件列表",
 			View:  Window.FileListWindowView,
 		},
@@ -42,6 +50,7 @@ type LeftContainer struct {
 	MenuBox    *fyne.Container
 	MenuTree   *widget.Tree
 	MenuIndex  string
+	LogoButton *widget.Button
 	RightBox   *RightContainer
 	MainWindow fyne.Window
 }
@@ -94,6 +103,9 @@ func (i *LeftContainer) Init() *LeftContainer {
 	}
 	// 选中默认项
 	i.MenuTree.Select(fyne.CurrentApp().Preferences().StringWithFallback(i.MenuIndex, "welcome"))
-	i.MenuBox = container.NewBorder(nil, nil, nil, nil, i.MenuTree)
+	i.LogoButton = widget.NewButtonWithIcon("", theme.ComputerIcon(), func() {
+		dialog.ShowInformation("提示", "欢迎使用超级助手", i.MainWindow)
+	})
+	i.MenuBox = container.NewBorder(nil, i.LogoButton, nil, nil, i.MenuTree)
 	return i
 }
