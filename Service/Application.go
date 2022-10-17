@@ -11,6 +11,7 @@ import (
 
 //go:embed ico.ico
 var iconByte []byte
+var application *Application
 
 type Application struct {
 	// 应用
@@ -28,11 +29,12 @@ type Application struct {
 }
 
 func NewApp() *Application {
-	return &Application{
+	application = &Application{
 		height:    600,
 		width:     800,
 		menuIndex: "default",
 	}
+	return application
 }
 
 func (i *Application) Run() {
@@ -81,7 +83,7 @@ func (i *Application) MasterWindow() {
 // LeftMenuSet 左侧菜单
 func (i *Application) LeftMenuSet() {
 	i.app.Preferences().SetString("selectedMenu", "check")
-	i.LeftBox = NewLeftContainer(i.RightBox, i.Window).Init()
+	i.LeftBox = NewLeftContainer(i.Window).Init()
 }
 
 // RightBoxSet 右侧内容
@@ -92,9 +94,9 @@ func (i *Application) RightBoxSet() {
 
 // MakeTray 托盘图标
 func (i *Application) MakeTray() {
-	i.Window.SetCloseIntercept(func() {
-		i.Window.Hide()
-	})
+	//i.Window.SetCloseIntercept(func() {
+	//	i.Window.Hide()
+	//})
 	if desk, ok := i.app.(desktop.App); ok {
 		menu := fyne.NewMenu("")
 		menu.Items = make([]*fyne.MenuItem, 0)
