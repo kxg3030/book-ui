@@ -1,4 +1,4 @@
-package Service
+package Window
 
 import (
 	"fyne.io/fyne/v2"

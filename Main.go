@@ -1,10 +1,6 @@
 package main
 
-import (
-	"github.com/kxg3030/book-ui/Service"
-)
-
 func main() {
-	app := Service.NewApp()
+	app := Window.NewApp()
 	app.Run()
 }

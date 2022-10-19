@@ -1,4 +1,4 @@
-package Service
+package Window
 
 import (
 	"fyne.io/fyne/v2"
@@ -7,6 +7,7 @@ import (
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
+	"github.com/kxg3030/book-ui/Service"
 	"golang.org/x/image/colornames"
 )
 
@@ -30,10 +31,12 @@ func WelcomeWindow(window fyne.Window) fyne.CanvasObject {
 		statusLabel.Text = "已登陆"
 		statusLabel.Color = colornames.Green
 		statusLabel.Refresh()
-		fyne.CurrentApp().SendNotification(&fyne.Notification{
-			Title:   "提示",
-			Content: "登陆成功",
-		})
+		success := Service.NewBookService(username.Text, password.Text).Login()
+		notice := &fyne.Notification{Title: "提示", Content: "账号或密码错误"}
+		if success {
+			notice.Content = "登陆成功"
+		}
+		fyne.CurrentApp().SendNotification(notice)
 	})
 	// 退出登陆
 	cancelButton := widget.NewButtonWithIcon("退出", theme.LogoutIcon(), func() {
