@@ -17,7 +17,7 @@ func WelcomeWindow(window fyne.Window) fyne.CanvasObject {
 	password.SetPlaceHolder("请输入密码")
 	loginForm := widget.NewForm(widget.NewFormItem("账号", username), widget.NewFormItem("密码", password))
 
-	statusLabel := canvas.NewText("未登陆", colornames.Teal)
+	statusLabel := canvas.NewText("未登陆", colornames.Orange)
 	// 如果要居中,最外层只能border容器,内部包裹一个max容器(max容器才有高度)
 	statusBox := container.NewMax(container.NewCenter(statusLabel))
 	// 账号登陆
@@ -27,7 +27,9 @@ func WelcomeWindow(window fyne.Window) fyne.CanvasObject {
 			return
 		}
 		application.LeftBox.LogoButton.SetText(username.Text)
-
+		statusLabel.Text = "已登陆"
+		statusLabel.Color = colornames.Green
+		statusLabel.Refresh()
 		fyne.CurrentApp().SendNotification(&fyne.Notification{
 			Title:   "提示",
 			Content: "登陆成功",
