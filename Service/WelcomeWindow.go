@@ -7,6 +7,7 @@ import (
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
+	"golang.org/x/image/colornames"
 )
 
 func WelcomeWindow(window fyne.Window) fyne.CanvasObject {
@@ -15,6 +16,10 @@ func WelcomeWindow(window fyne.Window) fyne.CanvasObject {
 	password := widget.NewPasswordEntry()
 	password.SetPlaceHolder("请输入密码")
 	loginForm := widget.NewForm(widget.NewFormItem("账号", username), widget.NewFormItem("密码", password))
+
+	statusLabel := canvas.NewText("未登陆", colornames.Teal)
+	// 如果要居中,最外层只能border容器,内部包裹一个max容器(max容器才有高度)
+	statusBox := container.NewMax(container.NewCenter(statusLabel))
 	// 账号登陆
 	loginButton := widget.NewButtonWithIcon("登陆", theme.LoginIcon(), func() {
 		if len(username.Text) <= 0 || len(password.Text) <= 0 {
@@ -22,6 +27,7 @@ func WelcomeWindow(window fyne.Window) fyne.CanvasObject {
 			return
 		}
 		application.LeftBox.LogoButton.SetText(username.Text)
+
 		fyne.CurrentApp().SendNotification(&fyne.Notification{
 			Title:   "提示",
 			Content: "登陆成功",
@@ -39,12 +45,6 @@ func WelcomeWindow(window fyne.Window) fyne.CanvasObject {
 	})
 	// 登陆按钮容器
 	grid := container.NewGridWithColumns(2, loginButton, cancelButton)
-	notice := widget.NewRichTextFromMarkdown(`
-- 说明：仅用于验证，不会收集任何信息
-`)
 
-	logo := canvas.NewImageFromResource(theme.AccountIcon())
-	logo.FillMode = canvas.ImageFillStretch
-	logo.SetMinSize(fyne.NewSize(0, 300))
-	return container.NewVBox(loginForm, grid, notice, logo)
+	return container.NewBorder(container.NewVBox(loginForm, grid), nil, nil, nil, statusBox)
 }

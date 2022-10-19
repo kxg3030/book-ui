@@ -36,11 +36,15 @@ var (
 			Intro: "文件管理",
 			View:  FileManageWindow,
 		},
+		"other": {
+			Title: "测试菜单",
+			View:  OtherWindow,
+		},
 	}
 	// MenuLayout 所有菜单组成的层级结构
 	MenuLayout = map[string][]string{
 		"fileManage": {"fileCheck", "fileList"},
-		"":           {"welcome", "fileManage"},
+		"":           {"welcome", "fileManage", "other"},
 	}
 )
 
@@ -92,9 +96,9 @@ func (i *LeftContainer) Init() *LeftContainer {
 			// 记录当前选中的菜单选项
 			fyne.CurrentApp().Preferences().SetString("selectedMenu", uid)
 			// 更新菜单
-			application.RightBox.ContentMainNext.Objects = []fyne.CanvasObject{menu.View(i.MainWindow)}
+			application.RightBox.ContentMainBox.Objects = []fyne.CanvasObject{menu.View(i.MainWindow)}
 			application.RightBox.BreadLabel.SetText(menu.Title)
-			application.RightBox.ContentMainNext.Refresh()
+			application.RightBox.ContentMainBox.Refresh()
 		},
 	}
 	// 选中默认项

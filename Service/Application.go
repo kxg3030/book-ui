@@ -58,7 +58,7 @@ func (i *Application) SupportZh() {
 }
 
 func (i *Application) MainWindow() {
-	i.Window = i.app.NewWindow("book-ui")
+	i.Window = i.app.NewWindow("小王子")
 	// 设置托盘图标
 	i.MakeTray()
 	// 设置应用图标

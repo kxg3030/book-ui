@@ -7,11 +7,10 @@ import (
 )
 
 type RightContainer struct {
-	Title           string
-	BreadLabel      *widget.Label
-	ContentBox      *fyne.Container
-	ContentMainBox  *fyne.Container
-	ContentMainNext *fyne.Container
+	Title          string
+	BreadLabel     *widget.Label
+	ContentBox     *fyne.Container
+	ContentMainBox *fyne.Container
 }
 
 func NewRightContainer() *RightContainer {
@@ -22,8 +21,10 @@ func NewRightContainer() *RightContainer {
 
 func (i *RightContainer) Init() *RightContainer {
 	i.BreadLabel = widget.NewLabel(i.Title)
-	i.ContentMainNext = container.NewMax()
-	i.ContentMainBox = container.NewBorder(nil, nil, nil, nil, i.ContentMainNext)
-	i.ContentBox = container.NewVBox(i.BreadLabel, widget.NewSeparator(), i.ContentMainBox)
+	i.ContentMainBox = container.NewMax()
+	i.ContentBox = container.NewBorder(
+		container.NewVBox(i.BreadLabel, widget.NewSeparator()),
+		nil, nil, nil, i.ContentMainBox,
+	)
 	return i
 }
